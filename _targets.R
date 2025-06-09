@@ -12,7 +12,6 @@ tar_source()
 # Run the R scripts in the R/ folder with your custom functions:
 tar_option_set(packages = c("readr", "dplyr", "ggplot2"))
 
-
 list(
   tar_target(file, "data/raw/data.csv", format = "file"),
   tar_target(data, get_data(file)),
