@@ -7,7 +7,6 @@ renv/library/
 .Ruserdata
 
 # 数据文件
-raw_data/
 data/
 # 输出文件
 output/
