@@ -17,6 +17,8 @@ list(
   tar_target(file, "data/raw/data.csv", format = "file"),
   tar_target(data, get_data(file)),
   tar_target(model, fit_model(data)),
-  tar_target(plot, plot_model(model, data))
+  tar_target(plot, plot_model(model, data)),
+  tar_render(report,path = "reports/report.Rmd"
+  )
 )
 
