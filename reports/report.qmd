@@ -1,26 +1,36 @@
 ---
-title: "report"
-format: html
-editor: visual
+title: "项目分析报告"
+author: 
+  - name: 夏冬辉
+    orcid: 0000-0002-2664-7596
+    email: dhxia@snut.edu.cn
+    affiliation:
+      陕西理工大学化学与环境科学学院<br>
+      汉中市汉台区东一环路1号<br>
+      陕西 723001, 中国
+date: "`r Sys.Date()`"
+format:
+  html:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    number_sections: true
+    theme: lumen
+    highlight: tango
+    df_print: paged
 ---
 
-## Quarto
+# 引言
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+这份报告是通过 targets 工作流自动生成的，使用的是 renv 管理的隔离环境。
 
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+# 数据概览
 
 ```{r}
-1 + 1
+
+# 注意：这里的数据是通过 targets 工作流生成的
+# summary(processed_data)
+
+# 可视化分析
+# plot
 ```
-
-You can add options to executable code like this
-
-```{r}
-#| echo: false
-2 * 2
-```
-
-The `echo: false` option disables the printing of code (only output is displayed).

@@ -58,7 +58,8 @@ cran_pkgs <- c(
   "knitr", 
   "bookdown",
   "remotes",
-  "igraph"
+  "igraph",
+  "quarto"
 )
 new_cran_pkgs <- cran_pkgs[!cran_pkgs %in% installed.packages()[, "Package"]]
 install.packages(
@@ -135,5 +136,96 @@ usethis::use_github()  # 创建远程仓库，并推送
 配置 targets 工作流 
 ```
 
-## 项目配置
+## 配置 targets 工作流 
+### 5. 创建_targets.R：
+```r
+# 创建_targets.R
+targets::use_targets()
 
+# 或
+targets::tar_script() # 会创建 _targets.R 文件
+```
+### 编辑 _targets.R 文件，设置工作流：
+```r
+# _targets.R
+
+# 导入R包
+library(targets)
+library(tarchetypes) # Load other packages as needed.
+
+# 加载R/文件夹下的分析函数functions.R
+tar_source()
+
+# 设置工作流使用的R包
+tar_option_set(packages = c("readr", "dplyr", "ggplot2"))
+
+# 设置工作六
+list(
+  # 定义数据文件路径
+  tar_target(file, "data/raw/data.csv", format = "file"),
+  
+  # 数据导入
+  tar_target(data, get_data(file)),
+  
+  # 构建模型
+  tar_target(model, fit_model(data)),
+  
+  # 绘制模型
+  tar_target(plot, plot_model(model, data)),
+  
+  # 渲染报告
+  tar_target(
+    report,
+    quarto::quarto_render(
+      input = "reports/report.qmd",
+      output_format = "html",
+      output_file = "output/report.html"
+    ),
+    format = "file"
+  )
+)
+```
+
+### 6. 编写分析函数代码
+
+```
+# 在 R/ 目录下创建分析函数：
+# R/functions.R
+get_data <- function(file) {
+  read_csv(file, col_types = cols()) %>%
+    filter(!is.na(Ozone))
+}
+
+fit_model <- function(data) {
+  lm(Ozone ~ Temp, data) %>%
+    coefficients()
+}
+
+plot_model <- function(model, data) {
+  ggplot(data) +
+    geom_point(aes(x = Temp, y = Ozone)) +
+    geom_abline(intercept = model[1], slope = model[2]) +
+    theme_gray(24) # Increased the font size.
+}
+```
+
+### 7. 创建其他文件目录
+```
+# 在项目根目录下创建以下目录：
+reproducible-analysis/
+├── R/               # R 脚本和函数
+├── data/            # 数据文件
+│   ├── raw/         # 原始数据
+│   └── processed/   # 处理后的数据
+├── output/          # 分析输出结果
+├── reports/         # 报告和文档
+├── _targets.R       # targets 配置文件
+├── renv.lock        # 依赖锁文件
+└── .gitignore       # Git 忽略文件
+```
+
+
+```
+usethis::edit_r_environ()
+RENV_CONFIG_SANDBOX_ENABLED = FALSE
+```
